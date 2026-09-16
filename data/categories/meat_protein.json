@@ -1,0 +1,204 @@
+{
+  "id": "meat_protein",
+  "label": "Meat & Protein",
+  "description": "Fresh and frozen animal proteins including beef, poultry, pork, fish, and seafood.",
+
+  "automatic_checks": [
+    {
+      "id": "cfia_fat_labeling",
+      "label": "CFIA Fat-Tier Labeling",
+      "rule": "For ground beef/pork: Extra Lean = ≤10% fat, Lean = ≤17% fat. Product must display CFIA-compliant fat tier on label.",
+      "applies_to": ["beef", "pork", "ground_meat"],
+      "pass_condition": "Product declares fat tier OR fat % is clearly stated on label",
+      "flag_if_fail": "Fat content not declared — cannot verify CFIA compliance"
+    },
+    {
+      "id": "single_ingredient",
+      "label": "Single Ingredient",
+      "rule": "Whole cuts (chicken breast, steak, fish fillet) must be single-ingredient with no brines, solutions, or flavor injections unless clearly labeled.",
+      "applies_to": ["whole_cuts", "fish", "poultry"],
+      "pass_condition": "Ingredients list shows meat only, OR injected % is declared",
+      "flag_if_fail": "Contains undeclared solution/brine — inflates weight, reduces protein density"
+    },
+    {
+      "id": "no_nitrates_preservatives",
+      "label": "No Added Nitrates / Preservatives",
+      "rule": "Processed meats (deli, bacon, sausage) must be free of added sodium nitrate/nitrite. 'Cultured celery powder' counts as a source — flag it.",
+      "applies_to": ["processed_meats", "deli", "bacon", "sausage"],
+      "pass_condition": "No sodium nitrate, sodium nitrite, or celery powder/extract on ingredients",
+      "flag_if_fail": "Contains nitrates or celery extract (de facto nitrate source)"
+    },
+    {
+      "id": "canadian_origin_preferred",
+      "label": "Canadian Origin Preferred",
+      "rule": "Prefer products with 'Product of Canada' or 'Canadian' on label. Flag imports — not a disqualifier, but noted.",
+      "applies_to": ["all"],
+      "pass_condition": "Origin declared as Canadian",
+      "flag_if_fail": "Origin not Canadian or not declared — still return best available, flag clearly"
+    }
+  ],
+
+  "certifications": [
+    {
+      "id": "canada_organic",
+      "label": "Canada Organic (CFIA)",
+      "applies_when": "organic toggle selected",
+      "logo_text": "Canada Organic / Biologique Canada",
+      "note": "Only valid if certification body is listed on label. 'Natural' and 'hormone-free' are unregulated marketing terms — do not treat as equivalent."
+    },
+    {
+      "id": "animal_welfare_approved",
+      "label": "Animal Welfare Approved / Certified Humane",
+      "applies_when": "any toggle selected",
+      "logo_text": "Certified Humane or Animal Welfare Approved",
+      "note": "Informational only — not a disqualifier if absent, but surfaced as a bonus signal."
+    }
+  ],
+
+  "toggle_options": [
+    {
+      "id": "beef_finish",
+      "label": "Beef Finishing Method",
+      "applies_to_subcategory": "beef",
+      "required": true,
+      "options": [
+        {
+          "id": "grass_finished",
+          "label": "Grass-Finished",
+          "pros": [
+            "Higher omega-3 fatty acids (2–4x vs. grain-finished)",
+            "Better omega-6:omega-3 ratio",
+            "Higher CLA (conjugated linoleic acid) content",
+            "No feedlot grain rations or growth promotants"
+          ],
+          "cons": [
+            "Typically 30–60% more expensive per kg",
+            "Leaner — less marbling, different texture/flavor",
+            "Harder to find at mainstream retailers (Walmart unlikely)",
+            "Canadian grass-finished supply is limited Oct–April"
+          ],
+          "best_for": "Nutrition-first, higher budget, willing to pay premium"
+        },
+        {
+          "id": "grain_finished",
+          "label": "Grain-Finished (Conventional)",
+          "pros": [
+            "Widely available at all 5 retailers",
+            "Lower price point",
+            "More consistent marbling and flavor",
+            "CFIA fat labeling is well-standardized"
+          ],
+          "cons": [
+            "Higher omega-6 content, worse omega-3 ratio",
+            "May include feedlot practices depending on source",
+            "CFIA 'Lean' and 'Extra Lean' grades still apply — must verify fat tier"
+          ],
+          "best_for": "Budget-conscious, prioritizing availability and consistency"
+        }
+      ]
+    },
+    {
+      "id": "salmon_source",
+      "label": "Salmon Source",
+      "applies_to_subcategory": "salmon",
+      "required": true,
+      "options": [
+        {
+          "id": "wild_caught",
+          "label": "Wild-Caught",
+          "pros": [
+            "No added astaxanthin dye (natural color from diet)",
+            "Lower saturated fat",
+            "No antibiotic or pesticide use",
+            "Higher omega-3 per 100g in most species"
+          ],
+          "cons": [
+            "Seasonal — frozen wild-caught is the year-round alternative",
+            "Higher price than farmed",
+            "Texture can be firmer, less forgiving to cook"
+          ],
+          "best_for": "Purity-first, willing to buy frozen"
+        },
+        {
+          "id": "farmed",
+          "label": "Farmed (Atlantic)",
+          "pros": [
+            "Available fresh year-round",
+            "Lower cost",
+            "Consistent texture and fat content",
+            "ASC-certified farms meet environmental standards"
+          ],
+          "cons": [
+            "Synthetic astaxanthin added for color (SalmoFan dye scale used)",
+            "Antibiotic use varies by farm — look for ASC or Ocean Wise",
+            "Higher omega-6 content from grain-based feed",
+            "PCB/contaminant levels historically higher than wild"
+          ],
+          "best_for": "Fresh fish preference, lower budget — prioritize ASC-certified"
+        }
+      ]
+    },
+    {
+      "id": "poultry_raise",
+      "label": "Poultry Raising Method",
+      "applies_to_subcategory": "chicken",
+      "required": false,
+      "options": [
+        {
+          "id": "free_run",
+          "label": "Free-Run / Free-Range",
+          "pros": [
+            "Indoor floor access (free-run) or outdoor access (free-range)",
+            "Regulated term in Canada under Canadian Chicken Farmers guidelines",
+            "Generally better welfare conditions"
+          ],
+          "cons": [
+            "Price premium (~20–40% over conventional)",
+            "Free-run ≠ organic — may still use conventional feed"
+          ],
+          "best_for": "Welfare-conscious, moderate budget"
+        },
+        {
+          "id": "conventional_poultry",
+          "label": "Conventional",
+          "pros": [
+            "Lowest cost",
+            "Widest availability across all retailers",
+            "Canadian supply chain is hormone-free by regulation (CFIA bans growth hormones in poultry)"
+          ],
+          "cons": [
+            "Cage-density housing",
+            "No additional welfare certification"
+          ],
+          "best_for": "Budget-first — note: all Canadian chicken is hormone-free regardless"
+        }
+      ]
+    }
+  ],
+
+  "subcategories": ["beef", "chicken", "pork", "salmon", "tuna", "shrimp", "turkey", "lamb"],
+
+  "edge_case_rules": {
+    "no_qualifying_product": "Return best available. Flag every failed criterion. Never omit the category.",
+    "no_canadian_origin": "Flag as imported. Still return product with origin noted.",
+    "certification_missing": "If no certified option exists, apply ingredient/label check as substitute. Note absence of certification in report."
+  },
+
+  "retailers_in_scope": ["walmart_ca", "well_ca", "goodnessme", "sobeys_instacart", "costco_ca"],
+
+  "report_fields": [
+    "product_name",
+    "brand",
+    "retailer",
+    "price_per_unit",
+    "price_per_100g",
+    "origin",
+    "fat_tier",
+    "certifications_present",
+    "toggle_match",
+    "automatic_checks_passed",
+    "flags",
+    "delivery_available",
+    "url"
+  ]
+}

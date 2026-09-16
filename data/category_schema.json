@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GroceryCategory",
+  "description": "Schema for a single grocery category definition in the personal grocery research tool.",
+  "type": "object",
+  "required": ["id", "label", "automatic_checks", "certifications", "toggle_options", "subcategories", "edge_case_rules", "retailers_in_scope", "report_fields"],
+
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Snake_case identifier, e.g. meat_protein, dairy, protein_powder"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable name shown in UI"
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence description of what this category covers"
+    },
+
+    "automatic_checks": {
+      "type": "array",
+      "description": "Rules applied automatically — no user input required. Applied to every product before it can qualify.",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "rule", "applies_to", "pass_condition", "flag_if_fail"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "rule": {
+            "type": "string",
+            "description": "Plain-language description of the check logic"
+          },
+          "applies_to": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Which subcategories this check applies to. Use ['all'] to apply universally."
+          },
+          "pass_condition": {
+            "type": "string",
+            "description": "What must be true for the product to pass this check"
+          },
+          "flag_if_fail": {
+            "type": "string",
+            "description": "Message shown in report if the product fails this check"
+          }
+        }
+      }
+    },
+
+    "certifications": {
+      "type": "array",
+      "description": "Relevant certifications or standards. Where none exists, an ingredient/label rule substitutes.",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "applies_when", "note"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "applies_when": {
+            "type": "string",
+            "description": "When this certification is relevant, e.g. 'organic toggle selected' or 'always'"
+          },
+          "logo_text": {
+            "type": "string",
+            "description": "How the certification appears on label"
+          },
+          "note": {
+            "type": "string",
+            "description": "Important caveats — especially unregulated marketing terms that mimic this cert"
+          }
+        }
+      }
+    },
+
+    "toggle_options": {
+      "type": "array",
+      "description": "Multiple-choice tradeoff decisions presented to user. Only include where a real tradeoff exists.",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "applies_to_subcategory", "required", "options"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "applies_to_subcategory": {
+            "type": "string",
+            "description": "Which subcategory this toggle applies to. Use 'all' if universal."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "If true, user must select before research runs. If false, skippable with a default applied."
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "pros", "cons", "best_for"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "pros": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "cons": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "best_for": {
+                  "type": "string",
+                  "description": "One-liner for who this option suits"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "subcategories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of specific item types within this category"
+    },
+
+    "edge_case_rules": {
+      "type": "object",
+      "description": "Fallback behavior when no qualifying product exists",
+      "required": ["no_qualifying_product", "no_canadian_origin", "certification_missing"],
+      "properties": {
+        "no_qualifying_product": { "type": "string" },
+        "no_canadian_origin": { "type": "string" },
+        "certification_missing": { "type": "string" }
+      }
+    },
+
+    "retailers_in_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["walmart_ca", "well_ca", "goodnessme", "sobeys_instacart", "costco_ca"]
+      }
+    },
+
+    "report_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Fields to include for each product result in the PDF report"
+    }
+  }
+}

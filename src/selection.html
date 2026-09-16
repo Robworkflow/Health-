@@ -1,0 +1,773 @@
+<title>Grocery Research</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --bg: #F4F7F1;
+  --card: #FFFFFF;
+  --accent: #1B4D2E;
+  --accent-lt: #E8F2EC;
+  --pro: #166534;
+  --pro-bg: #F0FDF4;
+  --con: #92400E;
+  --con-bg: #FFFBEB;
+  --warn-bg: #FFFBEB;
+  --warn-border: #D97706;
+  --warn-text: #78350F;
+  --text: #0F1A12;
+  --text-2: #566356;
+  --border: #D9E4D4;
+  --sel-border: #1B4D2E;
+  --sel-bg: #E8F2EC;
+  --btn-text: #FFFFFF;
+  --tag-bg: #EEF4EC;
+  --tag-text: #2D5C38;
+  --check-bg: #EBF5EE;
+  --check-text: #166534;
+  --r: 12px;
+  --rs: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1710;
+    --card: #172219;
+    --accent: #52C97A;
+    --accent-lt: #102018;
+    --pro: #4ADE80;
+    --pro-bg: #0A1F0E;
+    --con: #FCD34D;
+    --con-bg: #1A1100;
+    --warn-bg: #1A1200;
+    --warn-border: #D97706;
+    --warn-text: #FCD34D;
+    --text: #ECF2EC;
+    --text-2: #8BA88C;
+    --border: #1F3022;
+    --sel-border: #52C97A;
+    --sel-bg: #102018;
+    --btn-text: #0D1710;
+    --tag-bg: #0E2015;
+    --tag-text: #52C97A;
+    --check-bg: #0E2015;
+    --check-text: #52C97A;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0D1710;
+  --card: #172219;
+  --accent: #52C97A;
+  --accent-lt: #102018;
+  --pro: #4ADE80;
+  --pro-bg: #0A1F0E;
+  --con: #FCD34D;
+  --con-bg: #1A1100;
+  --warn-bg: #1A1200;
+  --warn-border: #D97706;
+  --warn-text: #FCD34D;
+  --text: #ECF2EC;
+  --text-2: #8BA88C;
+  --border: #1F3022;
+  --sel-border: #52C97A;
+  --sel-bg: #102018;
+  --btn-text: #0D1710;
+  --tag-bg: #0E2015;
+  --tag-text: #52C97A;
+  --check-bg: #0E2015;
+  --check-text: #52C97A;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  padding-inline: 20px;
+  padding-block: 32px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Progress */
+.progress-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.progress-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+.progress-dot.done { background: var(--accent); }
+.progress-dot.active { background: var(--accent); transform: scale(1.5); }
+.progress-label {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-left: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Category header */
+.cat-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.cat-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(30px, 6vw, 44px);
+  font-weight: 600;
+  line-height: 1.08;
+  color: var(--text);
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+.cat-desc {
+  color: var(--text-2);
+  margin-bottom: 28px;
+}
+
+/* Auto-checks panel */
+.auto-checks {
+  background: var(--check-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 28px;
+}
+.auto-checks-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--check-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.auto-checks-title::before {
+  content: '✓';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: var(--btn-text);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.check-item {
+  display: flex;
+  gap: 10px;
+}
+.check-icon {
+  color: var(--pro);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 13px;
+}
+.check-text strong {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+}
+.check-text span {
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+
+/* Toggle step header */
+.step-header { margin-bottom: 22px; }
+.step-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+.step-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 8px;
+  text-wrap: balance;
+}
+.step-applies {
+  font-size: 13px;
+  color: var(--text-2);
+}
+.step-applies strong { color: var(--accent); font-weight: 600; }
+
+/* Warning box */
+.warning-box {
+  background: var(--warn-bg);
+  border: 1.5px solid var(--warn-border);
+  border-radius: var(--rs);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--warn-text);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.warning-box strong {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Option cards */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.option-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.option-card:hover { border-color: var(--accent); }
+.option-card.selected {
+  border-color: var(--sel-border);
+  background: var(--sel-bg);
+}
+.option-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.option-radio {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: transparent;
+  background: transparent;
+  transition: all 0.15s;
+  margin-top: 2px;
+}
+.option-card.selected .option-radio {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--btn-text);
+}
+.pros-cons { display: flex; flex-direction: column; gap: 10px; }
+.group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.pros-label { color: var(--pro); }
+.cons-label { color: var(--con); }
+.pro-item, .con-item {
+  font-size: 13px;
+  line-height: 1.4;
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  color: var(--text);
+}
+.pro-item::before {
+  content: '+';
+  color: var(--pro);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.con-item::before {
+  content: '−';
+  color: var(--con);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.best-for {
+  font-size: 12px;
+  color: var(--tag-text);
+  background: var(--tag-bg);
+  border-radius: 100px;
+  padding: 5px 12px;
+  align-self: flex-start;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.best-for strong { font-weight: 700; }
+
+/* Optional note */
+.optional-note {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 18px;
+  padding: 10px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn {
+  padding: 14px 28px;
+  border-radius: var(--rs);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--btn-text);
+  flex: 1;
+}
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-primary:not(:disabled):hover { opacity: 0.86; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1.5px solid var(--border);
+  padding: 13px 20px;
+  flex-shrink: 0;
+}
+.btn-ghost:hover { border-color: var(--text-2); }
+
+/* Summary */
+.summary-intro { font-size: 14px; color: var(--text-2); margin-bottom: 24px; }
+.summary-table {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.summary-row {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  align-items: stretch;
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-key {
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--accent-lt);
+  width: 46%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1.3;
+}
+.summary-val {
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+}
+.auto-applied-section { margin-bottom: 24px; }
+.auto-applied-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+}
+.auto-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.auto-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--check-bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--check-text);
+}
+.auto-chip::before { content: '✓'; font-weight: 800; }
+.research-note {
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--rs);
+  padding: 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.research-note strong { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .summary-key { width: 48%; font-size: 12px; }
+  .summary-val { font-size: 13px; }
+}
+</style>
+
+<div id="app"></div>
+
+<script>
+const CATEGORY = {
+  id: "meat_protein",
+  label: "Meat & Protein",
+  description: "Fresh and frozen animal proteins including beef, poultry, pork, fish, and seafood.",
+  automatic_checks: [
+    {
+      id: "cfia_fat_labeling",
+      label: "CFIA Fat-Tier Labeling",
+      rule: "Extra Lean ≤10% · Lean ≤17% · Medium ≤23% · Regular ≤30% — fat tier must be declared on label"
+    },
+    {
+      id: "single_ingredient",
+      label: "Single-Ingredient Rule",
+      rule: "Whole cuts: ingredients list must show meat only — no brines, solutions, or flavor injections unless declared"
+    },
+    {
+      id: "no_nitrates",
+      label: "No Added Nitrates",
+      rule: "Processed meats: free of sodium nitrate/nitrite — 'cultured celery powder' flagged as a de facto nitrate source"
+    },
+    {
+      id: "canadian_origin",
+      label: "Canadian Origin Check",
+      rule: "'Product of Canada' preferred — imports flagged but not disqualified; best available always returned"
+    }
+  ],
+  toggle_options: [
+    {
+      id: "beef_finish",
+      label: "Beef Finishing Method",
+      applies_to_subcategory: "beef",
+      required: true,
+      label_warning: "'Grass-Fed' alone is unregulated in Canada — the animal may still have been grain-finished. Only accept labels that explicitly say 'Grass-Finished' or '100% Grass-Fed and Finished'.",
+      options: [
+        {
+          id: "grass_finished",
+          label: "Grass-Finished",
+          pros: [
+            "Higher omega-3s (2–4× vs. grain-finished)",
+            "Better omega-6:omega-3 ratio",
+            "Higher CLA (conjugated linoleic acid) content",
+            "No feedlot grain rations or growth promotants"
+          ],
+          cons: [
+            "30–80% price premium per kg",
+            "Butcher/specialty only — unlikely at Walmart or Sobeys",
+            "Leaner, less marbling, different texture",
+            "Limited Canadian supply Oct–April"
+          ],
+          best_for: "Nutrition-first, higher budget"
+        },
+        {
+          id: "grain_finished",
+          label: "Grain-Finished (Conventional)",
+          pros: [
+            "Available at all 5 retailers",
+            "Lower price point",
+            "Consistent marbling and flavor",
+            "CFIA fat labeling is well-standardized"
+          ],
+          cons: [
+            "Higher omega-6 content, worse omega-3 ratio",
+            "May include feedlot practices depending on source",
+            "Must still verify CFIA fat tier label"
+          ],
+          best_for: "Budget-conscious, prioritizing availability"
+        }
+      ]
+    },
+    {
+      id: "salmon_source",
+      label: "Salmon Source",
+      applies_to_subcategory: "salmon",
+      required: true,
+      label_warning: null,
+      options: [
+        {
+          id: "wild_caught",
+          label: "Wild-Caught",
+          pros: [
+            "No synthetic astaxanthin dye",
+            "Lower saturated fat",
+            "No antibiotics or pesticide exposure",
+            "Higher omega-3 per 100g in most species"
+          ],
+          cons: [
+            "Seasonal — frozen is the year-round option",
+            "Higher price than farmed",
+            "Firmer texture, less forgiving to cook"
+          ],
+          best_for: "Purity-first, willing to buy frozen"
+        },
+        {
+          id: "farmed",
+          label: "Farmed (Atlantic)",
+          pros: [
+            "Available fresh year-round",
+            "Lower cost",
+            "Consistent texture and fat content",
+            "ASC-certified farms available at major retailers"
+          ],
+          cons: [
+            "Synthetic astaxanthin added for color",
+            "Antibiotic use varies by farm — look for ASC label",
+            "Higher omega-6 from grain-based feed",
+            "Higher historical PCB levels than wild"
+          ],
+          best_for: "Fresh fish preference, lower budget — prioritize ASC-certified"
+        }
+      ]
+    },
+    {
+      id: "poultry_raise",
+      label: "Poultry Raising Method",
+      applies_to_subcategory: "chicken",
+      required: false,
+      label_warning: null,
+      options: [
+        {
+          id: "free_run",
+          label: "Free-Run / Free-Range",
+          pros: [
+            "Regulated term under Canadian Chicken Farmers guidelines",
+            "Indoor floor access (free-run) or outdoor access (free-range)",
+            "Better welfare conditions overall"
+          ],
+          cons: [
+            "20–40% price premium over conventional",
+            "Free-run ≠ organic — may still use conventional feed"
+          ],
+          best_for: "Welfare-conscious, moderate budget"
+        },
+        {
+          id: "conventional_poultry",
+          label: "Conventional",
+          pros: [
+            "Lowest price point",
+            "Widest availability across all retailers",
+            "All Canadian chicken is hormone-free by CFIA regulation"
+          ],
+          cons: [
+            "High-density housing",
+            "No additional welfare certification"
+          ],
+          best_for: "Budget-first — hormone-free regardless of label"
+        }
+      ]
+    }
+  ]
+};
+
+let step = 0;
+const selections = {};
+const TOGGLES = CATEGORY.toggle_options;
+const TOTAL = 1 + TOGGLES.length + 1;
+
+function dots() {
+  return Array.from({length: TOTAL}, (_, i) => {
+    const cls = i < step ? 'done' : i === step ? 'active' : '';
+    return `<div class="progress-dot ${cls}"></div>`;
+  }).join('') + `<span class="progress-label">Step ${step + 1} of ${TOTAL}</span>`;
+}
+
+function renderChecks() {
+  return CATEGORY.automatic_checks.map(c => `
+    <li class="check-item">
+      <span class="check-icon">✓</span>
+      <span class="check-text">
+        <strong>${c.label}</strong>
+        <span>${c.rule}</span>
+      </span>
+    </li>
+  `).join('');
+}
+
+function renderIntro() {
+  return `
+    <div class="progress-bar">${dots()}</div>
+    <div class="cat-eyebrow">Category 1 of 12</div>
+    <h1 class="cat-title">${CATEGORY.label}</h1>
+    <p class="cat-desc">${CATEGORY.description}</p>
+    <div class="auto-checks">
+      <div class="auto-checks-title">Applied automatically — no input needed</div>
+      <ul class="check-list">${renderChecks()}</ul>
+    </div>
+    <p style="font-size:14px;color:var(--text-2);margin-bottom:28px;">
+      You'll make <strong style="color:var(--text)">${TOGGLES.length} preference decisions</strong> for this category. Each presents real tradeoffs — pick what fits your goals.
+    </p>
+    <div class="nav">
+      <button class="btn btn-primary" onclick="proceed()">Start Selections →</button>
+    </div>
+  `;
+}
+
+function renderToggle(toggle) {
+  const idx = TOGGLES.indexOf(toggle);
+  const sel = selections[toggle.id];
+  const canNext = !toggle.required || sel !== undefined;
+
+  const cards = toggle.options.map(opt => `
+    <div class="option-card ${sel === opt.id ? 'selected' : ''}" onclick="pick('${toggle.id}', '${opt.id}')">
+      <div class="option-name">
+        <span>${opt.label}</span>
+        <div class="option-radio">${sel === opt.id ? '✓' : ''}</div>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <div class="group-label pros-label">Pros</div>
+          ${opt.pros.map(p => `<div class="pro-item"><span>${p}</span></div>`).join('')}
+        </div>
+        <div>
+          <div class="group-label cons-label">Cons</div>
+          ${opt.cons.map(c => `<div class="con-item"><span>${c}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="best-for"><strong>Best for:</strong> ${opt.best_for}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="progress-bar">${dots()}</div>
+    <div class="step-header">
+      <div class="step-eyebrow">Decision ${idx + 1} of ${TOGGLES.length}</div>
+      <h2 class="step-title">${toggle.label}</h2>
+      <p class="step-applies">Applies to: <strong>${toggle.applies_to_subcategory}</strong>${!toggle.required ? ' <span style="color:var(--text-2);font-weight:400">&nbsp;· optional</span>' : ''}</p>
+    </div>
+    ${toggle.label_warning ? `<div class="warning-box"><strong>⚠ Label Watch</strong>${toggle.label_warning}</div>` : ''}
+    <div class="options-grid">${cards}</div>
+    ${!toggle.required ? `<p class="optional-note">This decision is optional — you can proceed without selecting and a default will be applied during research.</p>` : ''}
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="back()">← Back</button>
+      <button class="btn btn-primary" onclick="proceed()" ${!canNext ? 'disabled' : ''}>
+        ${step < TOTAL - 2 ? 'Next →' : 'Review Selections →'}
+      </button>
+    </div>
+  `;
+}
+
+function renderSummary() {
+  const rows = TOGGLES.map(t => {
+    const chosen = t.options.find(o => o.id === selections[t.id]);
+    return `
+      <div class="summary-row">
+        <div class="summary-key">${t.label}</div>
+        <div class="summary-val">${chosen ? chosen.label : '<span style="color:var(--text-2);font-weight:400">Skipped</span>'}</div>
+      </div>
+    `;
+  }).join('');
+
+  const chips = CATEGORY.automatic_checks.map(c =>
+    `<span class="auto-chip">${c.label}</span>`
+  ).join('');
+
+  return `
+    <div class="progress-bar">${dots()}</div>
+    <div class="cat-eyebrow">Meat & Protein</div>
+    <h2 class="cat-title" style="font-size:clamp(22px,5vw,32px)">Your Selections</h2>
+    <p class="summary-intro">These preferences will filter product research across all 5 retailers. Review before running.</p>
+    <div class="summary-table">${rows}</div>
+    <div class="auto-applied-section">
+      <div class="auto-applied-title">Automatic checks also applied</div>
+      <div class="auto-chips">${chips}</div>
+    </div>
+    <div class="research-note">
+      <strong>Next:</strong> Live product research runs against these selections across Walmart, well.ca, GoodnessMe, Sobeys/Instacart, and Costco — returning real products, prices per 100g, and delivery availability to your postal code.
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="back()">← Back</button>
+      <button class="btn btn-primary" onclick="alert('Step 3 — live product research — coming in the next build.')">Begin Research →</button>
+    </div>
+  `;
+}
+
+function proceed() {
+  const t = TOGGLES[step - 1];
+  if (t && t.required && !selections[t.id]) return;
+  step++;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function back() {
+  if (step > 0) { step--; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+
+function pick(toggleId, optionId) {
+  selections[toggleId] = optionId;
+  render();
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (step === 0) app.innerHTML = renderIntro();
+  else if (step <= TOGGLES.length) app.innerHTML = renderToggle(TOGGLES[step - 1]);
+  else app.innerHTML = renderSummary();
+}
+
+render();
+</script>

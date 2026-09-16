@@ -7,7 +7,7 @@
     {
       "id": "cfia_fat_labeling",
       "label": "CFIA Fat-Tier Labeling",
-      "rule": "For ground beef/pork: Extra Lean = ≤10% fat, Lean = ≤17% fat. Product must display CFIA-compliant fat tier on label.",
+      "rule": "For ground beef/pork: Extra Lean = ≤10% fat, Lean = ≤17% fat, Medium = ≤23% fat, Regular = ≤30% fat. Product must display CFIA-compliant fat tier on label.",
       "applies_to": ["beef", "pork", "ground_meat"],
       "pass_condition": "Product declares fat tier OR fat % is clearly stated on label",
       "flag_if_fail": "Fat content not declared — cannot verify CFIA compliance"
@@ -65,6 +65,7 @@
         {
           "id": "grass_finished",
           "label": "Grass-Finished",
+          "label_warning": "⚠️ 'Grass-Fed' alone is NOT the same as 'Grass-Finished' — in Canada it is unregulated and means the animal may have eaten grass at some point but was still grain-finished. Only accept labels that say 'Grass-Finished' or '100% Grass-Fed and Finished'.",
           "pros": [
             "Higher omega-3 fatty acids (2–4x vs. grain-finished)",
             "Better omega-6:omega-3 ratio",
@@ -72,9 +73,9 @@
             "No feedlot grain rations or growth promotants"
           ],
           "cons": [
-            "Typically 30–60% more expensive per kg",
+            "Typically 30–80% more expensive per kg",
+            "Primarily found at butcher shops and specialty retailers — unlikely at Walmart or Sobeys",
             "Leaner — less marbling, different texture/flavor",
-            "Harder to find at mainstream retailers (Walmart unlikely)",
             "Canadian grass-finished supply is limited Oct–April"
           ],
           "best_for": "Nutrition-first, higher budget, willing to pay premium"
